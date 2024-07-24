@@ -195,25 +195,25 @@ public class Main implements NativeKeyListener {
 			}
 		});
 		mnMenu.add(mntmConfiguracoes);
-		
+
 		JMenu mnNewMenu = new JMenu("Atalhos");
 		menuBar.add(mnNewMenu);
-		
+
 		JMenuItem mntmNewMenuItem = new JMenuItem("Copiar: ALT + Nº Campo");
 		mnNewMenu.add(mntmNewMenuItem);
-		
+
 		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Colar: CTRL + Shift + Nº Campo");
 		mnNewMenu.add(mntmNewMenuItem_1);
-		
+
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Salvar: CTRL + S");
 		mnNewMenu.add(mntmNewMenuItem_2);
-		
+
 		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Atualizar: F5");
 		mnNewMenu.add(mntmNewMenuItem_3);
-		
+
 		JMenuItem mntmNewMenuItem_4 = new JMenuItem("Anterior: CTRL + CIMA");
 		mnNewMenu.add(mntmNewMenuItem_4);
-		
+
 		JMenuItem mntmNewMenuItem_5 = new JMenuItem("Próximo: CTRL + BAIXO");
 		mnNewMenu.add(mntmNewMenuItem_5);
 
@@ -455,16 +455,37 @@ public class Main implements NativeKeyListener {
 		btnAnterior.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				salvarEscola();
+				if (salvarEscola() == 1) {
 
-				int anteriorId = escolaSelecionada.getId() - 1;
-				escolaSelecionada = escolaDao.acessaEscolaById(anteriorId, listaSelecionada);
+					int anteriorId = escolaSelecionada.getId() - 1;
+					escolaSelecionada = escolaDao.acessaEscolaById(anteriorId, listaSelecionada);
 
-				if (escolaSelecionada.getId() == 0) {
-					JOptionPane.showMessageDialog(null, "Esta é a primeira escola da lista");
-					escolaSelecionada = escolaDao.acessaEscolaById(anteriorId + 1, listaSelecionada);
+					if (escolaSelecionada.getId() == 0) {
+						JOptionPane.showMessageDialog(null, "Esta é a primeira escola da lista");
+						escolaSelecionada = escolaDao.acessaEscolaById(anteriorId + 1, listaSelecionada);
+					}
+					mostraEscola(escolaSelecionada);
+
+				} else {
+
+					int prosseguir = JOptionPane.showConfirmDialog(null,
+							"Erro ao salvar escola, os dados serão perdidos, deseja continuar?", "Erro",
+							JOptionPane.YES_NO_OPTION);
+
+					if (prosseguir == JOptionPane.YES_OPTION) {
+
+						int anteriorId = escolaSelecionada.getId() - 1;
+						escolaSelecionada = escolaDao.acessaEscolaById(anteriorId, listaSelecionada);
+
+						if (escolaSelecionada.getId() == 0) {
+							JOptionPane.showMessageDialog(null, "Esta é a primeira escola da lista");
+							escolaSelecionada = escolaDao.acessaEscolaById(anteriorId + 1, listaSelecionada);
+						}
+						mostraEscola(escolaSelecionada);
+
+					}
+
 				}
-				mostraEscola(escolaSelecionada);
 
 			}
 		});
@@ -477,16 +498,37 @@ public class Main implements NativeKeyListener {
 		btnPro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
-				salvarEscola();
+				if (salvarEscola() == 1) {
 
-				int proximoId = escolaSelecionada.getId() + 1;
-				escolaSelecionada = escolaDao.acessaEscolaById(proximoId, listaSelecionada);
+					int proximoId = escolaSelecionada.getId() + 1;
+					escolaSelecionada = escolaDao.acessaEscolaById(proximoId, listaSelecionada);
 
-				if (escolaSelecionada.getId() == 0) {
-					JOptionPane.showMessageDialog(null, "Esta é a última escola da lista");
-					escolaSelecionada = escolaDao.acessaEscolaById(proximoId - 1, listaSelecionada);
+					if (escolaSelecionada.getId() == 0) {
+						JOptionPane.showMessageDialog(null, "Esta é a última escola da lista");
+						escolaSelecionada = escolaDao.acessaEscolaById(proximoId - 1, listaSelecionada);
+					}
+					mostraEscola(escolaSelecionada);
+
+				} else {
+
+					int prosseguir = JOptionPane.showConfirmDialog(null,
+							"Erro ao salvar escola, os dados serão perdidos, deseja continuar?", "Erro",
+							JOptionPane.YES_NO_OPTION);
+
+					if (prosseguir == JOptionPane.YES_OPTION) {
+
+						int proximoId = escolaSelecionada.getId() + 1;
+						escolaSelecionada = escolaDao.acessaEscolaById(proximoId, listaSelecionada);
+
+						if (escolaSelecionada.getId() == 0) {
+							JOptionPane.showMessageDialog(null, "Esta é a última escola da lista");
+							escolaSelecionada = escolaDao.acessaEscolaById(proximoId - 1, listaSelecionada);
+						}
+						mostraEscola(escolaSelecionada);
+
+					}
+
 				}
-				mostraEscola(escolaSelecionada);
 
 			}
 		});
@@ -501,7 +543,7 @@ public class Main implements NativeKeyListener {
 		panel.add(comboBox);
 
 		comboBox.addActionListener(e -> {
-			
+
 			JComboBox<String> cb = (JComboBox<String>) e.getSource();
 			String selected = (String) cb.getSelectedItem();
 
@@ -542,7 +584,7 @@ public class Main implements NativeKeyListener {
 		txtTelefone.setText(escola.getTelefone());
 		txtPorte.setText(escola.getPorte());
 		txtEmeo.setText(escola.getEmeo());
-		txtCnpj.setText(String.valueOf(escola.getCnpj()));
+		txtCnpj.setText(escola.getCnpj());
 		txtEmail.setText(escola.getEmail());
 		txtTelefone2.setText(escola.getTelefone2());
 		txtTelefone3.setText(escola.getTelefone3());
@@ -564,16 +606,22 @@ public class Main implements NativeKeyListener {
 
 	public int salvarEscola() {
 
-		escolaSelecionada = new Escola(escolaSelecionada.getId(), listaSelecionada, txtEscola.getText(),
-				Integer.valueOf(txtInep.getText()), txtUf.getText(), txtMunicipio.getText(), txtEndereco.getText(),
-				txtTelefone.getText(), txtPorte.getText(), txtEmeo.getText(), Integer.valueOf(txtCnpj.getText()),
-				txtEmail.getText(), txtTelefone2.getText(), txtTelefone3.getText(), txtTelefone4.getText(),
-				txtSite.getText(), txtInstagram.getText(), txtSistemaDeEnsino.getText(), txtAgendaDigital.getText(),
-				txtAnotacoes.getText());
+		try {
 
-		if (escolaDao.atualizaEscola(escolaSelecionada) != 0) {
-			return 1;
-		} else {
+			escolaSelecionada = new Escola(escolaSelecionada.getId(), listaSelecionada, txtEscola.getText(),
+					Integer.valueOf(txtInep.getText()), txtUf.getText(), txtMunicipio.getText(), txtEndereco.getText(),
+					txtTelefone.getText(), txtPorte.getText(), txtEmeo.getText(), txtCnpj.getText(),
+					txtEmail.getText(), txtTelefone2.getText(), txtTelefone3.getText(), txtTelefone4.getText(),
+					txtSite.getText(), txtInstagram.getText(), txtSistemaDeEnsino.getText(), txtAgendaDigital.getText(),
+					txtAnotacoes.getText());
+
+			if (escolaDao.atualizaEscola(escolaSelecionada) == 1) {
+				return 1;
+			} else {
+				return 0;
+			}
+
+		} catch (Exception e) {
 			return 0;
 		}
 
@@ -617,17 +665,19 @@ public class Main implements NativeKeyListener {
 		keysList.put(NativeKeyEvent.VC_U, txtInstagram);
 		keysList.put(NativeKeyEvent.VC_I, txtSite);
 
-			
 		for (Map.Entry<Integer, JTextField> entry : keysList.entrySet()) {
 
 			int chave = entry.getKey();
 			JTextField textField = entry.getValue();
 
-			if (e.getModifiers() == (NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.SHIFT_L_MASK) && e.getKeyCode() == chave) {
-				// O operador | combina os bits dos dois valores, o que permite verificar se ambos estão presentes nos modificadores.
+			if (e.getModifiers() == (NativeKeyEvent.CTRL_L_MASK | NativeKeyEvent.SHIFT_L_MASK)
+					&& e.getKeyCode() == chave) {
+				// O operador | combina os bits dos dois valores, o que permite verificar se
+				// ambos estão presentes nos modificadores.
 				frame.setExtendedState(JFrame.ICONIFIED);
 				frame.setExtendedState(JFrame.NORMAL);
 				textField.setText(colaClipboard());
+				
 			}
 
 			if (e.getModifiers() == NativeKeyEvent.ALT_L_MASK && e.getKeyCode() == chave) {
@@ -639,7 +689,6 @@ public class Main implements NativeKeyListener {
 		if (e.getKeyCode() == NativeKeyEvent.VC_F5) {
 
 			atualizar();
-			System.out.println("F5");
 
 		}
 
@@ -647,16 +696,37 @@ public class Main implements NativeKeyListener {
 
 			if (btnPro.isEnabled()) {
 
-				salvarEscola();
+				if (salvarEscola() == 1) {
 
-				int proximoId = escolaSelecionada.getId() + 1;
-				escolaSelecionada = escolaDao.acessaEscolaById(proximoId, listaSelecionada);
+					int proximoId = escolaSelecionada.getId() + 1;
+					escolaSelecionada = escolaDao.acessaEscolaById(proximoId, listaSelecionada);
 
-				if (escolaSelecionada.getId() == 0) {
-					JOptionPane.showMessageDialog(null, "Esta é a última escola da lista");
-					escolaSelecionada = escolaDao.acessaEscolaById(proximoId - 1, listaSelecionada);
+					if (escolaSelecionada.getId() == 0) {
+						JOptionPane.showMessageDialog(null, "Esta é a última escola da lista");
+						escolaSelecionada = escolaDao.acessaEscolaById(proximoId - 1, listaSelecionada);
+					}
+					mostraEscola(escolaSelecionada);
+
+				} else {
+
+					int prosseguir = JOptionPane.showConfirmDialog(null,
+							"Erro ao salvar escola, os dados serão perdidos, deseja continuar?", "Erro",
+							JOptionPane.YES_NO_OPTION);
+
+					if (prosseguir == JOptionPane.YES_OPTION) {
+
+						int proximoId = escolaSelecionada.getId() + 1;
+						escolaSelecionada = escolaDao.acessaEscolaById(proximoId, listaSelecionada);
+
+						if (escolaSelecionada.getId() == 0) {
+							JOptionPane.showMessageDialog(null, "Esta é a última escola da lista");
+							escolaSelecionada = escolaDao.acessaEscolaById(proximoId - 1, listaSelecionada);
+						}
+						mostraEscola(escolaSelecionada);
+
+					}
+
 				}
-				mostraEscola(escolaSelecionada);
 
 			}
 
@@ -666,16 +736,37 @@ public class Main implements NativeKeyListener {
 
 			if (btnAnterior.isEnabled()) {
 
-				salvarEscola();
+				if (salvarEscola() == 1) {
 
-				int anteriorId = escolaSelecionada.getId() - 1;
-				escolaSelecionada = escolaDao.acessaEscolaById(anteriorId, listaSelecionada);
+					int anteriorId = escolaSelecionada.getId() - 1;
+					escolaSelecionada = escolaDao.acessaEscolaById(anteriorId, listaSelecionada);
 
-				if (escolaSelecionada.getId() == 0) {
-					JOptionPane.showMessageDialog(null, "Esta é a primeira escola da lista");
-					escolaSelecionada = escolaDao.acessaEscolaById(anteriorId + 1, listaSelecionada);
+					if (escolaSelecionada.getId() == 0) {
+						JOptionPane.showMessageDialog(null, "Esta é a primeira escola da lista");
+						escolaSelecionada = escolaDao.acessaEscolaById(anteriorId + 1, listaSelecionada);
+					}
+					mostraEscola(escolaSelecionada);
+
+				} else {
+
+					int prosseguir = JOptionPane.showConfirmDialog(null,
+							"Erro ao salvar escola, os dados serão perdidos, deseja continuar?", "Erro",
+							JOptionPane.YES_NO_OPTION);
+
+					if (prosseguir == JOptionPane.YES_OPTION) {
+
+						int anteriorId = escolaSelecionada.getId() - 1;
+						escolaSelecionada = escolaDao.acessaEscolaById(anteriorId, listaSelecionada);
+
+						if (escolaSelecionada.getId() == 0) {
+							JOptionPane.showMessageDialog(null, "Esta é a primeira escola da lista");
+							escolaSelecionada = escolaDao.acessaEscolaById(anteriorId + 1, listaSelecionada);
+						}
+						mostraEscola(escolaSelecionada);
+
+					}
+
 				}
-				mostraEscola(escolaSelecionada);
 
 			}
 
@@ -694,14 +785,7 @@ public class Main implements NativeKeyListener {
 		}
 
 	}
-
-	public void nativeKeyReleased(NativeKeyEvent e) {
-
-		if (e.getKeyCode() == NativeKeyEvent.VC_CONTROL) {
-			ctrlPressed = false;
-		}
-
-	}
+	
 
 	public void atualizaCampos() {
 
@@ -744,21 +828,20 @@ public class Main implements NativeKeyListener {
 		}
 
 	}
-	
+
 	public void copiaParaClipboard(String valorDoCampo) {
 
-        // Obtém o toolkit padrão do sistema
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
+		// Obtém o toolkit padrão do sistema
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
 
-        // Obtém a área de transferência do sistema
-        Clipboard clipboard = toolkit.getSystemClipboard();
+		// Obtém a área de transferência do sistema
+		Clipboard clipboard = toolkit.getSystemClipboard();
 
-        // Cria um conteúdo transferível com o texto desejado
-        Transferable transferableText = new StringSelection(valorDoCampo);
+		// Cria um conteúdo transferível com o texto desejado
+		Transferable transferableText = new StringSelection(valorDoCampo);
 
-        // Define o conteúdo na área de transferência
-        clipboard.setContents(transferableText, null);
+		// Define o conteúdo na área de transferência
+		clipboard.setContents(transferableText, null);
 
-		
 	}
 }

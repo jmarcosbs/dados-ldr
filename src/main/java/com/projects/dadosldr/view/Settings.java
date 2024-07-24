@@ -252,7 +252,7 @@ public class Settings extends JFrame {
 		
 		try {
 			
-			sc = new Scanner(arquivoCSV);
+			sc = new Scanner(arquivoCSV, "UTF-8");
 			
 			sc.nextLine(); // Ignora cabeçalho
 			
@@ -319,7 +319,7 @@ public class Settings extends JFrame {
 		
 		try {
 			
-			Scanner sc = new Scanner(arquivoCSV);
+			Scanner sc = new Scanner(arquivoCSV, "UTF-8");
 			sc.nextLine(); // Ignora cabeçalho
 			
 			int tamanhoLista = 0;

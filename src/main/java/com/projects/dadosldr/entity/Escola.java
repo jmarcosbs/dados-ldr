@@ -12,7 +12,7 @@ public class Escola {
 	private String telefone;
 	private String porte;
 	private String emeo;
-	private int cnpj;
+	private String cnpj;
 	private String email;
 	private String telefone2;
 	private String telefone3;
@@ -29,7 +29,7 @@ public class Escola {
 
 	
 	public Escola(int id, String lista, String nome, int inep, String uf, String municipio, String endereco,
-			String telefone, String porte, String emeo, int cnpj, String email, String telefone2, String telefone3,
+			String telefone, String porte, String emeo, String cnpj, String email, String telefone2, String telefone3,
 			String telefone4, String site, String instagram, String sistemaDeEnsino, String agendaDigital,
 			String anotacoes) {
 		super();
@@ -59,7 +59,7 @@ public class Escola {
 
 	public Escola(String lista, String nome, int inep, String uf,
 			String municipio, String endereco, String telefone,
-			String porte, String emeo, int cnpj, String email,
+			String porte, String emeo, String cnpj, String email,
 			String telefone2, String telefone3, String telefone4,
 			String site, String instagram, String sistemaDeEnsino,
 			String agendaDigital, String anotacoes) {
@@ -185,11 +185,11 @@ public class Escola {
 		this.emeo = emeo;
 	}
 
-	public int getCnpj() {
+	public String getCnpj() {
 		return cnpj;
 	}
 
-	public void setCnpj(int cnpj) {
+	public void setCnpj(String cnpj) {
 		this.cnpj = cnpj;
 	}
 

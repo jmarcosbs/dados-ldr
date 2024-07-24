@@ -21,7 +21,7 @@ public class EscolaDao {
 		Class.forName(driver);
 
 		// Banco de dados
-		String url = "jdbc:mysql://localhost:3306/brasil38k?useTimezone=true&serverTimezone=UTC";
+		String url = "jdbc:mysql://localhost:3306/brasil38k?useTimezone=true&serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8";
 
 		// Usuario
 		String user = "root";
@@ -143,7 +143,7 @@ public class EscolaDao {
 				String telefone = rs.getString(8);
 				String porte = rs.getString(9);
 				String emeo = rs.getString(10);
-				int cnpj = rs.getInt(11);
+				String cnpj = rs.getString(11);
 				String email = rs.getString(12);
 				String telefone2 = rs.getString(13);
 				String telefone3 = rs.getString(14);
@@ -202,7 +202,7 @@ public class EscolaDao {
 				String telefone = rs.getString(8);
 				String porte = rs.getString(9);
 				String emeo = rs.getString(10);
-				int cnpj = rs.getInt(11);
+				String cnpj = rs.getString(11);
 				String email = rs.getString(12);
 				String telefone2 = rs.getString(13);
 				String telefone3 = rs.getString(14);
@@ -256,7 +256,7 @@ public class EscolaDao {
 			pst.setString(6, escola.getTelefone());
 			pst.setString(7, escola.getPorte());
 			pst.setString(8, escola.getEmeo());
-			pst.setInt(9, escola.getCnpj());
+			pst.setString(9, escola.getCnpj());
 			pst.setString(10, escola.getEmail());
 			pst.setString(11, escola.getTelefone2());
 			pst.setString(12, escola.getTelefone3());
